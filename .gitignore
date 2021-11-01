@@ -22,5 +22,6 @@ fp-info-cache
 *.ses
 
 # Exported BOM files
+# re-enabling CSV BOM, not everyone has KiCad installed --jg
 *.xml
-*.csv
+# *.csv
