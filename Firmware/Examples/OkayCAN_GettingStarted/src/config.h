@@ -38,8 +38,8 @@ static int ISO_TP_FRAME_PADDING = 1;
 static int CAN_DATA_RATE = 500E3;
 
 /* CAN/TWAI outbound arbitration id */
-//static int CAN_REQUEST_ID = 0x7E0; // ecu
-static int CAN_REQUEST_ID = 0x7DF; // broadcast
+static int CAN_REQUEST_ID = 0x7E0; // ecu
+// static int CAN_REQUEST_ID = 0x7DF; // broadcast
 
 /* CAN/TWAI inbound (filtered) arbitration id */
 static int CAN_RESPONSE_ID = 0x7E8;
