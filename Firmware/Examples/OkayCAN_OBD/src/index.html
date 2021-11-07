@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OBD Console</title>
+    <style>
+        :root {
+            --main-bg-color: #111;
+        }
+
+        html {
+            font-family: sans-serif;
+        }
+    </style>
+
+</head>
+
+<body>
+    <span>OkayCAN Debug</span>
+    <pre id="json-container">
+
+    </pre>
+</body>
+
+
+<script>
+
+    // generates a human-readable interpretation of the pid
+    function interpret_pid(pid_envelope) {
+        if (pid_envelope.pid == 0x010C) {
+            // rpm
+            pid_envelope.interpreted = `${((pid_envelope.raw[0] << 8) + pid_envelope.raw[1]) >> 2} rpm`;
+        }
+        else if (pid_envelope.pid == 0x010D) {
+            // engine speed
+            pid_envelope.interpreted = `${pid_envelope.raw[0]} km/h`;
+        }
+        else if (pid_envelope.pid == 0x0111) {
+            // throttle position
+            pid_envelope.interpreted = `${Math.round(pid_envelope.raw[0] / 255 * 100)} %`;
+        }
+        else {
+            pid_envelope.interpreted = 'unknown';
+        }
+    }
+
+    // prints an uint8array to the console
+    function buffer_to_hex(buffer) {
+        return [...new Uint8Array(buffer)]
+            .map(x => x.toString(16).padStart(2, '0'))
+            .join('');
+    }
+
+    // reads a little-endian integer from a uint8array buffer
+    function read_integer_le(buffer, offset, size) {
+        let result = 0;
+        for (let i = 0; i < size; i++) {
+            result |= buffer[offset + i] << (8 * i);
+        }
+        return result;
+    }
+
+    // creates an obd report object by parsing a uint8array buffer
+    function buffer_to_obd_report(buffer) {
+
+        // these offsets have to be matched to the firmware's definition
+        let report = {
+            timestamp: read_integer_le(buffer, 0, 8),
+            battery_voltage_mv: read_integer_le(buffer, 8, 4),
+            tx_error_counter: read_integer_le(buffer, 12, 4),
+            pid_response: [],
+        };
+
+        // try to store the pids; if the pid starts with zero, it is invalid
+        for (let i = 16; i < buffer.length; i += 8) {
+            let pid = (buffer[i] << 8) | buffer[i + 1];
+            if (pid === 0) {
+                continue;
+            }
+            // unset response bit to recover original pid
+            pid &= ~0x4000;
+
+            let content = new Uint8Array(6);
+            for (let j = 0; j < content.length; j++) {
+                content[j] = buffer[i + 2 + j];
+            }
+            let pid_envelope = {
+                pid: pid,
+                raw: content,
+                interpreted: '',
+            };
+            interpret_pid(pid_envelope);
+            report.pid_response.push(pid_envelope);
+        }
+
+        return report;
+    }
+
+    function present_obd_report(report) {
+        console.log(report);
+        document.getElementById("json-container").innerText = JSON.stringify(report, null, 4);
+    }
+
+    // fetches fresh obd data from the device
+    function poll_endpoint() {
+        fetch('/poll-ep', {
+            method: 'post',
+            body: ''
+        }).then(function (response) {
+            return response.text();
+        }).then(function (data) {
+            // data is presented as a hex-string, convert it into a uint8array buffer
+            const data_as_bytes = new Uint8Array(data.length / 2);
+            for (let i = 0; i < data_as_bytes.length; i++) {
+                data_as_bytes[i] = parseInt(data[2 * i] + data[2 * i + 1], 16);
+            }
+            // console.log(data_as_bytes);
+            let obd_report = buffer_to_obd_report(data_as_bytes);
+            present_obd_report(obd_report);
+        });
+    }
+
+    function entrypoint() {
+        setInterval(() => {
+            poll_endpoint();
+        }, 500);
+    }
+    entrypoint();
+
+
+</script>
+
+</html>
