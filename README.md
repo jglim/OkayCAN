@@ -81,6 +81,16 @@ Received Part Number: 6519010601
 ...
 ```
 
+**[OkayCAN_OBD](https://github.com/jglim/OkayCAN/tree/main/Firmware/Examples/OkayCAN_OBD)**
+
+_UNVERIFIED: No vehicle to test on; tested against a simulated ecu on another esp32. Please let me know if this works! --jg_
+
+Queries an OBD-II compliant ECU for its engine speed, vehicle speed, and throttle position. These parameters are typically supported by most ECUs.
+
+A open Wi-Fi network with the name "OkayCAN-OBD" is also created, and serves a simple web page over http at [192.168.4.1](http://192.168.4.1/) . The page shows real-time results of the OBD queries as JSON if they are available.
+
+![OBD Example screenshot](https://raw.githubusercontent.com/jglim/OkayCAN/main/Media/resources/example-obd.png)
+
 ---
 
 ## Hardware
