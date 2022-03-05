@@ -4,7 +4,7 @@
 
 ![Expectations shield](https://raw.githubusercontent.com/jglim/OkayCAN/main/Media/resources/shield_expectations.svg)
 
-![OkayCAN board](https://raw.githubusercontent.com/jglim/OkayCAN/main/Media/resources/okaycan.jpg)
+![OkayCAN board](https://user-images.githubusercontent.com/1116555/156866916-078137eb-af83-4b8a-b83d-e7dbeb8b34c5.jpg)
 
 ## Features
 
@@ -31,7 +31,7 @@ This project is permissively licensed (MIT)
 
 **Build it yourself**
 
-- PCB: [Gerbers are zipped](https://github.com/jglim/OkayCAN/raw/main/Hardware/V1.0/OkayCAN/gerbers/OkayCAN_fab_gerbers_211006.zip) and ready to be uploaded to your fab
+- PCB: [Gerbers are zipped](https://github.com/jglim/OkayCAN/raw/main/Hardware/V1.1/OkayCAN/gerbers/OkayCAN_fab_gerbers_211101.zip) and ready to be uploaded to your fab
 - BOM: Almost every component has a matching LCSC part number, and [the CSV](https://github.com/jglim/OkayCAN/blob/main/Hardware/V1.0/OkayCAN/raster/OkayCAN_BOM.csv) works with their BOM upload feature.
     - The only odd part is the OBD2 header (with case), which has to be sourced from marketplaces like Aliexpress
 - Assembly: as most of the parts are surface-mounted, getting a stencil will make the process much quicker.
@@ -99,7 +99,7 @@ A open Wi-Fi network with the name "OkayCAN-OBD" is also created, and serves a s
 
 ### OkayCAN V1.0
 
-*Consider waiting for V1.1 which addresses a board outline issue*
+*Please use the newer V1.1 as it addresses a board outline issue*
 
 **Schematic [(PDF)](https://github.com/jglim/OkayCAN/blob/main/Hardware/V1.0/OkayCAN/raster/OkayCAN_Schematic.pdf)**
 
@@ -130,7 +130,7 @@ Available [here](https://github.com/jglim/OkayCAN/blob/main/Hardware/V1.0/OkayCA
 
 ### OkayCAN V1.1
 
-*(in progress)*
+*Latest version*
 
 Minor revision to V1.0
 
